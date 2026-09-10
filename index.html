@@ -1,0 +1,400 @@
+from pathlib import Path
+import shutil, zipfile, textwrap
+
+base = Path("/mnt/data/machi_travel_website")
+if base.exists():
+    shutil.rmtree(base)
+base.mkdir()
+
+# Copy the uploaded logo into the website folder.
+logo_src = Path("/mnt/data/彩色Mg幸運四葉軌道徽章.png")
+shutil.copy2(logo_src, base / "logo.png")
+
+html = r'''<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="瑪騏旅行社｜用心規劃每一趟旅程，讓旅行成為美好回憶。">
+  <title>瑪騏旅行社｜MA CHI TRAVEL AGENCY</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=Noto+Sans+TC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --navy:#092b73;
+      --blue:#0c58b8;
+      --sky:#2aa9df;
+      --orange:#ff9d16;
+      --red:#ed2430;
+      --green:#27a83b;
+      --ink:#17304d;
+      --muted:#66778b;
+      --bg:#f6f9fc;
+      --white:#fff;
+      --shadow:0 18px 55px rgba(9,43,115,.12);
+      --radius:24px;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{
+      font-family:"Noto Sans TC",sans-serif;
+      color:var(--ink);background:var(--white);line-height:1.8;
+      overflow-x:hidden;
+    }
+    a{text-decoration:none;color:inherit}
+    img{max-width:100%;display:block}
+    .container{width:min(1180px,calc(100% - 40px));margin:auto}
+    .nav{
+      position:fixed;top:0;left:0;right:0;z-index:1000;
+      background:rgba(255,255,255,.88);backdrop-filter:blur(18px);
+      border-bottom:1px solid rgba(9,43,115,.08);
+      transition:.3s;
+    }
+    .nav.scrolled{box-shadow:0 8px 35px rgba(0,0,0,.08)}
+    .nav-inner{height:82px;display:flex;align-items:center;justify-content:space-between}
+    .brand{display:flex;align-items:center;gap:12px}
+    .brand img{width:56px;height:56px;object-fit:contain}
+    .brand-text strong{display:block;color:var(--navy);font-size:20px;line-height:1.2}
+    .brand-text span{font:600 10px Montserrat,sans-serif;letter-spacing:2px;color:var(--muted)}
+    .links{display:flex;gap:30px;align-items:center;font-size:15px;font-weight:600}
+    .links a{position:relative}
+    .links a:after{content:"";position:absolute;left:0;bottom:-7px;width:0;height:2px;background:var(--sky);transition:.25s}
+    .links a:hover:after{width:100%}
+    .nav-cta{background:var(--navy);color:white!important;padding:10px 20px;border-radius:999px}
+    .nav-cta:after{display:none}
+    .menu{display:none;background:none;border:0;font-size:28px;color:var(--navy);cursor:pointer}
+    
+    .hero{
+      min-height:760px;padding-top:82px;display:flex;align-items:center;position:relative;
+      background:
+        linear-gradient(90deg,rgba(3,28,76,.90) 0%,rgba(5,55,116,.72) 48%,rgba(4,39,91,.18) 100%),
+        url("https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=2200&q=85") center/cover;
+      color:#fff;
+    }
+    .hero:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 80% 25%,rgba(42,169,223,.28),transparent 32%)}
+    .hero-content{position:relative;max-width:720px;padding:90px 0}
+    .eyebrow{font:700 13px Montserrat,sans-serif;letter-spacing:3px;text-transform:uppercase;color:#9fe5ff;margin-bottom:20px}
+    h1{font-size:clamp(44px,6vw,78px);line-height:1.12;letter-spacing:-2px;margin-bottom:24px}
+    .hero p{font-size:19px;color:rgba(255,255,255,.88);max-width:620px}
+    .hero-actions{display:flex;gap:14px;margin-top:34px;flex-wrap:wrap}
+    .btn{display:inline-flex;align-items:center;justify-content:center;padding:13px 24px;border-radius:999px;font-weight:700;transition:.25s}
+    .btn-primary{background:white;color:var(--navy)}
+    .btn-outline{border:1px solid rgba(255,255,255,.55);color:white}
+    .btn:hover{transform:translateY(-3px);box-shadow:0 12px 25px rgba(0,0,0,.16)}
+    .hero-stat{display:flex;gap:42px;margin-top:58px}
+    .hero-stat strong{font-size:31px;display:block}
+    .hero-stat span{font-size:13px;color:rgba(255,255,255,.72)}
+    
+    section{padding:105px 0}
+    .section-head{display:flex;justify-content:space-between;align-items:end;gap:30px;margin-bottom:52px}
+    .label{font:700 12px Montserrat,sans-serif;letter-spacing:2.5px;color:var(--blue);margin-bottom:10px}
+    h2{font-size:clamp(30px,4vw,48px);line-height:1.25;color:var(--navy)}
+    .section-head p{max-width:500px;color:var(--muted)}
+    
+    .about{background:var(--bg)}
+    .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:center}
+    .about-image{border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);position:relative}
+    .about-image img{height:560px;width:100%;object-fit:cover}
+    .about-image .badge{
+      position:absolute;bottom:24px;left:24px;background:white;border-radius:18px;padding:16px 20px;
+      box-shadow:0 12px 35px rgba(0,0,0,.14)
+    }
+    .badge strong{font-size:25px;color:var(--navy);display:block}
+    .badge span{font-size:12px;color:var(--muted)}
+    .about-copy p{color:var(--muted);margin:20px 0}
+    .quote{border-left:4px solid var(--orange);padding:12px 0 12px 20px;font-weight:700;color:var(--navy)}
+    
+    .timeline{position:relative;max-width:1000px;margin:auto}
+    .timeline:before{content:"";position:absolute;left:50%;top:0;bottom:0;width:2px;background:#d9e7f5;transform:translateX(-50%)}
+    .time-item{display:grid;grid-template-columns:1fr 1fr;gap:65px;position:relative;margin:45px 0}
+    .time-item:nth-child(odd) .time-copy{grid-column:1;text-align:right}
+    .time-item:nth-child(odd) .time-year{grid-column:2;grid-row:1}
+    .time-item:nth-child(even) .time-copy{grid-column:2}
+    .time-item:nth-child(even) .time-year{grid-column:1;grid-row:1;text-align:right}
+    .time-year{font:800 48px Montserrat,sans-serif;color:var(--sky);align-self:center}
+    .time-copy{padding:20px 0}
+    .time-copy h3{font-size:22px;color:var(--navy);margin-bottom:7px}
+    .time-copy p{color:var(--muted);font-size:15px}
+    .dot{position:absolute;left:50%;top:42px;width:14px;height:14px;border-radius:50%;background:var(--orange);border:4px solid white;box-shadow:0 0 0 4px #ffe8c5;transform:translateX(-50%)}
+    
+    .services{background:linear-gradient(180deg,#fff,#f7fbff)}
+    .service-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+    .card{background:white;border:1px solid #e5edf5;border-radius:22px;padding:30px;transition:.3s}
+    .card:hover{transform:translateY(-7px);box-shadow:var(--shadow)}
+    .icon{width:52px;height:52px;border-radius:16px;background:#eaf6fc;display:grid;place-items:center;font-size:25px;margin-bottom:22px}
+    .card h3{font-size:20px;color:var(--navy);margin-bottom:9px}
+    .card p{font-size:14px;color:var(--muted)}
+    
+    .featured{background:var(--navy);color:white}
+    .featured h2{color:white}
+    .featured .label{color:#8fdefc}
+    .featured .section-head p{color:rgba(255,255,255,.68)}
+    .tour-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+    .tour{border-radius:22px;overflow:hidden;background:#fff;color:var(--ink);transition:.3s}
+    .tour:hover{transform:translateY(-7px)}
+    .tour img{height:250px;width:100%;object-fit:cover}
+    .tour-body{padding:23px}
+    .tag{display:inline-block;font-size:11px;font-weight:700;color:var(--blue);background:#e9f5fc;padding:4px 10px;border-radius:999px;margin-bottom:10px}
+    .tour h3{font-size:21px;color:var(--navy);margin-bottom:5px}
+    .tour p{font-size:13px;color:var(--muted)}
+    
+    .philosophy{text-align:center}
+    .values{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:50px}
+    .value{padding:40px 30px;border-radius:24px;background:var(--bg);position:relative;overflow:hidden}
+    .value:before{content:"";position:absolute;top:0;left:0;width:100%;height:5px;background:var(--sky)}
+    .value:nth-child(2):before{background:var(--green)}
+    .value:nth-child(3):before{background:var(--orange)}
+    .value b{font:800 30px Montserrat,sans-serif;color:var(--navy);display:block;margin-bottom:12px}
+    .value h3{font-size:20px;margin-bottom:8px}
+    .value p{font-size:14px;color:var(--muted)}
+    
+    .cta{
+      margin:0 20px 80px;border-radius:32px;padding:85px 30px;text-align:center;color:white;
+      background:linear-gradient(120deg,#072663,#0b64bf);
+      position:relative;overflow:hidden;
+    }
+    .cta:after{content:"✦";position:absolute;font-size:300px;right:-50px;bottom:-160px;color:rgba(255,255,255,.05)}
+    .cta h2{color:white;margin-bottom:16px}
+    .cta p{color:rgba(255,255,255,.8);max-width:620px;margin:0 auto 28px}
+    
+    footer{background:#061b43;color:white;padding:55px 0 25px}
+    .footer-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:60px}
+    .footer-brand{display:flex;gap:13px;align-items:center;margin-bottom:18px}
+    .footer-brand img{width:60px;height:60px;background:white;border-radius:12px}
+    footer h3{margin-bottom:15px}
+    footer p,footer a{font-size:14px;color:rgba(255,255,255,.67)}
+    footer a{display:block;margin:8px 0}
+    footer a:hover{color:white}
+    .copyright{border-top:1px solid rgba(255,255,255,.1);margin-top:40px;padding-top:20px;font-size:12px;color:rgba(255,255,255,.5)}
+    
+    .reveal{opacity:0;transform:translateY(24px);transition:.7s ease}
+    .reveal.show{opacity:1;transform:none}
+    
+    @media(max-width:850px){
+      .links{position:absolute;top:82px;left:20px;right:20px;background:white;border-radius:18px;padding:18px;display:none;box-shadow:var(--shadow);flex-direction:column;align-items:stretch;gap:4px}
+      .links.open{display:flex}
+      .links a{padding:10px 12px}
+      .menu{display:block}
+      .hero{min-height:680px}
+      .hero-content{padding:65px 0}
+      .about-grid{grid-template-columns:1fr;gap:35px}
+      .about-image img{height:400px}
+      .service-grid,.tour-grid,.values{grid-template-columns:1fr 1fr}
+      .timeline:before{left:9px}
+      .time-item{display:block;padding-left:40px;margin:35px 0}
+      .time-item:nth-child(n) .time-copy,.time-item:nth-child(n) .time-year{text-align:left}
+      .time-year{font-size:36px}
+      .dot{left:9px}
+      .section-head{display:block}
+      .section-head p{margin-top:15px}
+      .footer-grid{grid-template-columns:1fr 1fr}
+    }
+    @media(max-width:560px){
+      .container{width:min(100% - 28px,1180px)}
+      section{padding:75px 0}
+      .brand-text strong{font-size:17px}
+      .brand img{width:48px;height:48px}
+      .hero{min-height:640px}
+      .hero p{font-size:16px}
+      .hero-stat{gap:25px;margin-top:42px}
+      .hero-stat strong{font-size:25px}
+      .service-grid,.tour-grid,.values,.footer-grid{grid-template-columns:1fr}
+      .cta{margin:0 12px 55px;padding:65px 20px}
+    }
+  </style>
+</head>
+<body>
+  <header class="nav" id="nav">
+    <div class="container nav-inner">
+      <a class="brand" href="#home">
+        <img src="logo.png" alt="瑪騏旅行社 Logo">
+        <div class="brand-text"><strong>瑪騏旅行社</strong><span>MA CHI TRAVEL AGENCY</span></div>
+      </a>
+      <button class="menu" id="menu" aria-label="開啟選單">☰</button>
+      <nav class="links" id="links">
+        <a href="#home">首頁</a>
+        <a href="#about">關於瑪騏</a>
+        <a href="#journey">公司沿革</a>
+        <a href="#services">旅遊服務</a>
+        <a href="#tours">精選行程</a>
+        <a href="#contact" class="nav-cta">聯絡我們</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="container">
+        <div class="hero-content reveal">
+          <div class="eyebrow">MA CHI TRAVEL AGENCY</div>
+          <h1>每一趟旅程<br>都值得被好好記住</h1>
+          <p>用心規劃每一趟旅程，讓旅行成為美好回憶。從行程規劃到旅程服務，瑪騏旅行社用專業與熱情，陪伴每一位旅客探索世界。</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#tours">探索旅遊行程　→</a>
+            <a class="btn btn-outline" href="#about">認識瑪騏</a>
+          </div>
+          <div class="hero-stat">
+            <div><strong>2002</strong><span>品牌旅遊服務起點</span></div>
+            <div><strong>20+</strong><span>年旅遊服務經驗</span></div>
+            <div><strong>2024</strong><span>升格甲種旅行社</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="about" id="about">
+      <div class="container about-grid">
+        <div class="about-image reveal">
+          <img src="https://images.unsplash.com/photo-1527631746610-bca00a040d60?auto=format&fit=crop&w=1200&q=85" alt="旅客一起旅行">
+          <div class="badge"><strong>20+ YEARS</strong><span>陪伴旅客走過每一段旅程</span></div>
+        </div>
+        <div class="about-copy reveal">
+          <div class="label">ABOUT MA CHI</div>
+          <h2>從一個旅遊夢想開始，走過二十餘年。</h2>
+          <p>瑪騏旅行社自民國91年成立「瑪騏假期」以來，持續投入旅遊服務與行程規劃，累積多年旅遊產業經驗。</p>
+          <p>秉持「<strong>團結、和諧、創新</strong>」的經營理念，我們不斷提升旅遊品質與服務內容，從乙種旅行社到甲種旅行社，一步一步建立更加完整的旅遊服務能力。</p>
+          <div class="quote">旅行不只是抵達目的地，更是一段值得珍藏的回憶。</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="journey">
+      <div class="container">
+        <div class="section-head reveal">
+          <div><div class="label">OUR JOURNEY</div><h2>一路走來，始終為旅行而努力</h2></div>
+          <p>從「瑪騏假期」到甲種旅行社，我們持續累積專業、提升服務，陪伴更多旅客出發。</p>
+        </div>
+        <div class="timeline">
+          <div class="time-item reveal">
+            <span class="dot"></span>
+            <div class="time-copy"><h3>瑪騏假期成立</h3><p>民國91年（2002年）<br>開啟瑪騏旅行服務的第一步。</p></div>
+            <div class="time-year">2002</div>
+          </div>
+          <div class="time-item reveal">
+            <span class="dot"></span>
+            <div class="time-year">2016</div>
+            <div class="time-copy"><h3>瑪騏旅行社有限公司成立</h3><p>民國105年11月14日（2016年）<br>成立乙種旅行社「瑪騏旅行社有限公司」。</p></div>
+          </div>
+          <div class="time-item reveal">
+            <span class="dot"></span>
+            <div class="time-copy"><h3>升格為甲種旅行社</h3><p>民國113年（2024年）<br>成立甲種旅行社「瑪騏旅行社有限公司」，持續拓展更完整的旅遊服務。</p></div>
+            <div class="time-year">2024</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="services" id="services">
+      <div class="container">
+        <div class="section-head reveal">
+          <div><div class="label">OUR SERVICES</div><h2>從規劃到出發，<br>用心照顧每個細節</h2></div>
+          <p>依照旅客與團體需求，提供完整、專業且貼心的旅遊服務。</p>
+        </div>
+        <div class="service-grid">
+          <article class="card reveal"><div class="icon">🗺️</div><h3>國內旅遊</h3><p>探索台灣各地風景與人文，打造適合家庭、朋友與團體的旅遊行程。</p></article>
+          <article class="card reveal"><div class="icon">✈️</div><h3>國外旅遊</h3><p>精心規劃海外旅遊，帶您探索不同國家的文化、美景與生活。</p></article>
+          <article class="card reveal"><div class="icon">👥</div><h3>團體旅遊</h3><p>依照團體需求規劃專屬行程，從交通、住宿到景點安排，提供完整服務。</p></article>
+          <article class="card reveal"><div class="icon">✨</div><h3>客製化行程</h3><p>依照旅客需求與預算，規劃專屬旅遊體驗，讓行程更貼近您的期待。</p></article>
+          <article class="card reveal"><div class="icon">🏢</div><h3>企業／機關旅遊</h3><p>提供企業、機關及各類團體旅遊規劃服務，讓團體出遊更加順暢。</p></article>
+          <article class="card reveal"><div class="icon">💬</div><h3>旅遊諮詢</h3><p>從行程規劃到旅遊安排，提供專業且貼心的諮詢服務。</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="featured" id="tours">
+      <div class="container">
+        <div class="section-head reveal">
+          <div><div class="label">FEATURED TOURS</div><h2>精選旅遊行程</h2></div>
+          <p>以下為網站展示用範例行程，正式上線時可替換成瑪騏旅行社目前的實際旅遊產品。</p>
+        </div>
+        <div class="tour-grid">
+          <article class="tour reveal"><img src="https://images.unsplash.com/photo-1528360983277-13d401cdc186?auto=format&fit=crop&w=1000&q=85" alt="日本旅遊"><div class="tour-body"><span class="tag">JAPAN</span><h3>日本・東京探索之旅</h3><p>城市景色、文化體驗與美食，一次感受東京魅力。</p></div></article>
+          <article class="tour reveal"><img src="https://images.unsplash.com/photo-1524413840807-0c3cb6fa808d?auto=format&fit=crop&w=1000&q=85" alt="京都旅遊"><div class="tour-body"><span class="tag">JAPAN</span><h3>日本・京都古都之旅</h3><p>走進古都街道，感受歷史、人文與四季景色。</p></div></article>
+          <article class="tour reveal"><img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1000&q=85" alt="自然旅遊"><div class="tour-body"><span class="tag">TAIWAN</span><h3>台灣・山海慢旅行</h3><p>放慢腳步探索台灣自然風景，享受旅途中的每一刻。</p></div></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="philosophy" id="philosophy">
+      <div class="container">
+        <div class="label reveal">OUR PHILOSOPHY</div>
+        <h2 class="reveal">團結・和諧・創新</h2>
+        <p class="reveal" style="max-width:650px;margin:18px auto 0;color:var(--muted)">秉持初心，不斷創新與提升服務品質，為每一位旅客打造豐富、愉快且值得回憶的旅遊體驗。</p>
+        <div class="values">
+          <article class="value reveal"><b>01</b><h3>團結</h3><p>凝聚團隊力量，以專業合作提供更完善的旅遊服務。</p></article>
+          <article class="value reveal"><b>02</b><h3>和諧</h3><p>重視旅客與團隊之間的溝通，創造舒適、愉快的旅遊體驗。</p></article>
+          <article class="value reveal"><b>03</b><h3>創新</h3><p>持續思考與突破，打造更多元、更具品質的旅遊行程。</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta" id="contact">
+      <div class="container reveal">
+        <h2>準備好出發了嗎？</h2>
+        <p>無論是國內旅遊、海外旅遊、團體行程或客製化旅遊，讓瑪騏旅行社陪您一起規劃下一段旅程。</p>
+        <a class="btn btn-primary" href="mailto:service@example.com">立即諮詢　→</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-brand"><img src="logo.png" alt="瑪騏旅行社 Logo"><div><h3>瑪騏旅行社有限公司</h3><p>MA CHI TRAVEL AGENCY</p></div></div>
+          <p>用心規劃每一趟旅程，讓旅行成為美好回憶。</p>
+        </div>
+        <div><h3>網站導覽</h3><a href="#about">關於瑪騏</a><a href="#journey">公司沿革</a><a href="#services">旅遊服務</a><a href="#tours">精選行程</a></div>
+        <div><h3>聯絡我們</h3><p>電話｜請填入公司電話</p><p>地址｜請填入公司地址</p><p>Email｜請填入公司信箱</p></div>
+      </div>
+      <div class="copyright">© 2026 瑪騏旅行社有限公司. All Rights Reserved.</div>
+    </div>
+  </footer>
+
+  <script>
+    const nav=document.getElementById('nav');
+    const menu=document.getElementById('menu');
+    const links=document.getElementById('links');
+    window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',window.scrollY>20));
+    menu.addEventListener('click',()=>links.classList.toggle('open'));
+    document.querySelectorAll('.links a').forEach(a=>a.addEventListener('click',()=>links.classList.remove('open')));
+    const observer=new IntersectionObserver(entries=>{
+      entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('show')});
+    },{threshold:.12});
+    document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+  </script>
+</body>
+</html>
+'''
+
+(base / "index.html").write_text(html, encoding="utf-8")
+
+readme = """# 瑪騏旅行社網站
+
+## 使用方式
+1. 將整個資料夾上傳到網站主機。
+2. 開啟 `index.html` 即可預覽。
+3. `logo.png` 是本次提供的瑪騏旅行社 Logo。
+
+## 上線前建議修改
+- Footer 的公司電話、地址、Email
+- 聯絡按鈕的 Email
+- 「精選旅遊行程」的範例內容與圖片
+- 若有正式旅遊產品，可新增行程詳細頁
+- 建議補上旅行業相關登記資訊、隱私權政策與網站使用條款
+
+## 技術
+單一 HTML 檔案，內含 CSS 與 JavaScript；採 RWD 設計，可適應桌機、平板與手機。
+"""
+(base / "README.txt").write_text(readme, encoding="utf-8")
+
+zip_path = Path("/mnt/data/瑪騏旅行社_網站完整版.zip")
+if zip_path.exists():
+    zip_path.unlink()
+with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as z:
+    for p in base.rglob("*"):
+        z.write(p, p.relative_to(base.parent))
+
+print(f"網站已完成：{zip_path}")
+print(f"預覽檔：{base / 'index.html'}")
