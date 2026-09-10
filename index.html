@@ -208,14 +208,14 @@ html = r'''<!DOCTYPE html>
   <header class="nav" id="nav">
     <div class="container nav-inner">
       <a class="brand" href="#home">
-        <img src="logo.png" alt="瑪騏旅行社 Logo">
-        <div class="brand-text"><strong>瑪騏旅行社</strong><span>MA CHI TRAVEL AGENCY</span></div>
+        <img src="logo.png" alt="https://lh3.googleusercontent.com/pw/AP1GczMjZsj8_0fygyEpbNhXMFEZhfTKQcoi5E9RV51d_WsTFt3hPwVmaNP6CCeCwBmN-AZ7jtEtS14t6FGDU4ptOJA_Ydm9YBQW5GwZKz8_wfJqBpYMbBgDOg_g6YO0h71E1asrm221d18q-RSqF0WQelJK=w1080-h1080-s-no-gm?authuser=0">
+        <div class="brand-text"><strong>瑪騏旅行社</strong><span>MAGI TRAVEL AGENCY</span></div>
       </a>
       <button class="menu" id="menu" aria-label="開啟選單">☰</button>
       <nav class="links" id="links">
         <a href="#home">首頁</a>
         <a href="#about">關於瑪騏</a>
-        <a href="#journey">公司沿革</a>
+        <a href="#journey">公司歷史</a>
         <a href="#services">旅遊服務</a>
         <a href="#tours">精選行程</a>
         <a href="#contact" class="nav-cta">聯絡我們</a>
@@ -227,7 +227,7 @@ html = r'''<!DOCTYPE html>
     <section class="hero" id="home">
       <div class="container">
         <div class="hero-content reveal">
-          <div class="eyebrow">MA CHI TRAVEL AGENCY</div>
+          <div class="eyebrow">MAGI TRAVEL AGENCY</div>
           <h1>每一趟旅程<br>都值得被好好記住</h1>
           <p>用心規劃每一趟旅程，讓旅行成為美好回憶。從行程規劃到旅程服務，瑪騏旅行社用專業與熱情，陪伴每一位旅客探索世界。</p>
           <div class="hero-actions">
@@ -342,11 +342,11 @@ html = r'''<!DOCTYPE html>
     <div class="container">
       <div class="footer-grid">
         <div>
-          <div class="footer-brand"><img src="logo.png" alt="瑪騏旅行社 Logo"><div><h3>瑪騏旅行社有限公司</h3><p>MA CHI TRAVEL AGENCY</p></div></div>
+          <div class="footer-brand"><img src="logo.png" alt="https://lh3.googleusercontent.com/pw/AP1GczMjZsj8_0fygyEpbNhXMFEZhfTKQcoi5E9RV51d_WsTFt3hPwVmaNP6CCeCwBmN-AZ7jtEtS14t6FGDU4ptOJA_Ydm9YBQW5GwZKz8_wfJqBpYMbBgDOg_g6YO0h71E1asrm221d18q-RSqF0WQelJK=w1080-h1080-s-no-gm?authuser=0"><div><h3>瑪騏旅行社有限公司</h3><p>MAGI TRAVEL AGENCY</p></div></div>
           <p>用心規劃每一趟旅程，讓旅行成為美好回憶。</p>
         </div>
-        <div><h3>網站導覽</h3><a href="#about">關於瑪騏</a><a href="#journey">公司沿革</a><a href="#services">旅遊服務</a><a href="#tours">精選行程</a></div>
-        <div><h3>聯絡我們</h3><p>電話｜請填入公司電話</p><p>地址｜請填入公司地址</p><p>Email｜請填入公司信箱</p></div>
+        <div><h3>網站導覽</h3><a href="#about">關於瑪騏</a><a href="#journey">公司歷史</a><a href="#services">旅遊服務</a><a href="#tours">精選行程</a></div>
+        <div><h3>聯絡我們</h3><p>電話｜0963077019</p><p>地址｜宜蘭縣,五結鄉,復興一路288號(1樓)</p><p>Email｜maqi55912754@gmail.com</p></div>
       </div>
       <div class="copyright">© 2026 瑪騏旅行社有限公司. All Rights Reserved.</div>
     </div>
@@ -366,35 +366,4 @@ html = r'''<!DOCTYPE html>
   </script>
 </body>
 </html>
-'''
 
-(base / "index.html").write_text(html, encoding="utf-8")
-
-readme = """# 瑪騏旅行社網站
-
-## 使用方式
-1. 將整個資料夾上傳到網站主機。
-2. 開啟 `index.html` 即可預覽。
-3. `logo.png` 是本次提供的瑪騏旅行社 Logo。
-
-## 上線前建議修改
-- Footer 的公司電話、地址、Email
-- 聯絡按鈕的 Email
-- 「精選旅遊行程」的範例內容與圖片
-- 若有正式旅遊產品，可新增行程詳細頁
-- 建議補上旅行業相關登記資訊、隱私權政策與網站使用條款
-
-## 技術
-單一 HTML 檔案，內含 CSS 與 JavaScript；採 RWD 設計，可適應桌機、平板與手機。
-"""
-(base / "README.txt").write_text(readme, encoding="utf-8")
-
-zip_path = Path("/mnt/data/瑪騏旅行社_網站完整版.zip")
-if zip_path.exists():
-    zip_path.unlink()
-with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as z:
-    for p in base.rglob("*"):
-        z.write(p, p.relative_to(base.parent))
-
-print(f"網站已完成：{zip_path}")
-print(f"預覽檔：{base / 'index.html'}")
