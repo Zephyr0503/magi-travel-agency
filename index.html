@@ -1,10 +1,13 @@
-html = r'''<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="瑪騏旅行社｜用心規劃每一趟旅程，讓旅行成為美好回憶。">
+  <meta name="theme-color" content="#092b73">
   <title>瑪騏旅行社｜MAGI TRAVEL AGENCY</title>
+  <link rel="icon" type="image/svg+xml" href="https://lh3.googleusercontent.com/pw/AP1GczMjZsj8_0fygyEpbNhXMFEZhfTKQcoi5E9RV51d_WsTFt3hPwVmaNP6CCeCwBmN-AZ7jtEtS14t6FGDU4ptOJA_Ydm9YBQW5GwZKz8_wfJqBpYMb[...]
+  <link rel="apple-touch-icon" href="https://lh3.googleusercontent.com/pw/AP1GczMjZsj8_0fygyEpbNhXMFEZhfTKQcoi5E9RV51d_WsTFt3hPwVmaNP6CCeCwBmN-AZ7jtEtS14t6FGDU4ptOJA_Ydm9YBQW5GwZKz8_wfJqBpYMbBgDOg_g6YO0h71E1asrm221d18q-[...]
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=Noto+Sans+TC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -95,16 +98,21 @@ html = r'''<!DOCTYPE html>
     
     .timeline{position:relative;max-width:1000px;margin:auto}
     .timeline:before{content:"";position:absolute;left:50%;top:0;bottom:0;width:2px;background:#d9e7f5;transform:translateX(-50%)}
-    .time-item{display:grid;grid-template-columns:1fr 1fr;gap:65px;position:relative;margin:45px 0}
+    .time-item{display:grid;grid-template-columns:1fr 1fr;gap:65px;position:relative;margin:45px 0;transition:transform .35s ease, opacity .35s ease}
     .time-item:nth-child(odd) .time-copy{grid-column:1;text-align:right}
     .time-item:nth-child(odd) .time-year{grid-column:2;grid-row:1}
     .time-item:nth-child(even) .time-copy{grid-column:2}
     .time-item:nth-child(even) .time-year{grid-column:1;grid-row:1;text-align:right}
-    .time-year{font:800 48px Montserrat,sans-serif;color:var(--sky);align-self:center}
-    .time-copy{padding:20px 0}
+    .time-year{font:800 48px Montserrat,sans-serif;color:var(--sky);align-self:center;transition:transform .35s ease,color .35s ease,text-shadow .35s ease}
+    .time-copy{padding:20px 0;transition:transform .35s ease, filter .35s ease}
     .time-copy h3{font-size:22px;color:var(--navy);margin-bottom:7px}
     .time-copy p{color:var(--muted);font-size:15px}
-    .dot{position:absolute;left:50%;top:42px;width:14px;height:14px;border-radius:50%;background:var(--orange);border:4px solid white;box-shadow:0 0 0 4px #ffe8c5;transform:translateX(-50%)}
+    .dot{position:absolute;left:50%;top:42px;width:14px;height:14px;border-radius:50%;background:var(--orange);border:4px solid white;box-shadow:0 0 0 4px #ffe8c5;transform:translateX(-50%);transition:transform .35s ease, box-shadow .35s ease, background .35s ease}
+    .time-item:hover{transform:translateY(-8px)}
+    .time-item:hover .time-copy{transform:translateX(6px)}
+    .time-item:nth-child(even):hover .time-copy{transform:translateX(-6px)}
+    .time-item:hover .time-year{color:var(--blue);text-shadow:0 8px 20px rgba(12,88,184,.18)}
+    .time-item:hover .dot{transform:translateX(-50%) scale(1.2);box-shadow:0 0 0 8px rgba(255,157,22,.18);background:#ffb13a}
     
     .services{background:linear-gradient(180deg,#fff,#f7fbff)}
     .service-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
@@ -196,7 +204,7 @@ html = r'''<!DOCTYPE html>
   <header class="nav" id="nav">
     <div class="container nav-inner">
       <a class="brand" href="#home">
-        <img src="https://lh3.googleusercontent.com/pw/AP1GczMjZsj8_0fygyEpbNhXMFEZhfTKQcoi5E9RV51d_WsTFt3hPwVmaNP6CCeCwBmN-AZ7jtEtS14t6FGDU4ptOJA_Ydm9YBQW5GwZKz8_wfJqBpYMbBgDOg_g6YO0h71E1asrm221d18q-RSqF0WQelJK=w1080-h1080-s-no-gm?authuser=0">
+        <img src="https://lh3.googleusercontent.com/pw/AP1GczMjZsj8_0fygyEpbNhXMFEZhfTKQcoi5E9RV51d_WsTFt3hPwVmaNP6CCeCwBmN-AZ7jtEtS14t6FGDU4ptOJA_Ydm9YBQW5GwZKz8_wfJqBpYMbBgDOg_g6YO0h71E1asrm221d18q-[...]
         <div class="brand-text"><strong>瑪騏旅行社</strong><span>MAGI TRAVEL AGENCY</span></div>
       </a>
       <button class="menu" id="menu" aria-label="開啟選單">☰</button>
@@ -241,7 +249,7 @@ html = r'''<!DOCTYPE html>
           <div class="label">ABOUT MAGI</div>
           <h2>從一個旅遊夢想開始，走過二十餘年。</h2>
           <p>瑪騏旅行社自民國91年成立「瑪騏假期」以來，持續投入旅遊服務與行程規劃，累積多年旅遊產業經驗。</p>
-          <p>秉持「<strong>團結、和諧、創新</strong>」的經營理念，我們不斷提升旅遊品質與服務內容，從乙種旅行社到甲種旅行社，一步一步建立更加完善的旅行體驗。</p>
+          <p>秉持「<strong>團結、和諧、創新</strong>」的經營理念，我們不斷提升旅遊品質與服務內容，從乙種旅行社到甲種旅行社，一步一步建立更加完善的旅遊服務體系。</p>
           <div class="quote">旅行不只是抵達目的地，更是一段值得珍藏的回憶。</div>
         </div>
       </div>
@@ -297,9 +305,9 @@ html = r'''<!DOCTYPE html>
           <p>以下為網站展示用範例行程，正式上線時可替換成瑪騏旅行社目前的實際旅遊產品。</p>
         </div>
         <div class="tour-grid">
-          <article class="tour reveal"><img src="https://images.unsplash.com/photo-1528360983277-13d401cdc186?auto=format&fit=crop&w=1000&q=85" alt="日本旅遊"><div class="tour-body"><span class="tag">JAPAN</span><h3>日本・東京探索之旅</h3><p>城市景色、文化體驗與美食，一次感受東京魅力。</p></div></article>
-          <article class="tour reveal"><img src="https://images.unsplash.com/photo-1524413840807-0c3cb6fa808d?auto=format&fit=crop&w=1000&q=85" alt="京都旅遊"><div class="tour-body"><span class="tag">JAPAN</span><h3>日本・京都古都之旅</h3><p>走進古都街道，感受歷史、人文與四季景色。</p></div></article>
-          <article class="tour reveal"><img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1000&q=85" alt="自然旅遊"><div class="tour-body"><span class="tag">TAIWAN</span><h3>台灣・山海慢旅行</h3><p>放慢腳步探索台灣自然風景，享受旅途中的每一刻。</p></div></article>
+          <article class="tour reveal"><img src="https://images.unsplash.com/photo-1528360983277-13d401cdc186?auto=format&fit=crop&w=1000&q=85" alt="日本旅遊"><div class="tour-body"><span class="tag">日本</span><h3>東京・富士山 5日遊</h3><p>感受都市熱鬧與自然景色的完美結合。</p></div></article>
+          <article class="tour reveal"><img src="https://images.unsplash.com/photo-1524413840807-0c3cb6fa808d?auto=format&fit=crop&w=1000&q=85" alt="京都旅遊"><div class="tour-body"><span class="tag">日本</span><h3>京都古都文化之旅</h3><p>漫步祇園、嵐山與神社，體驗日式靜謐之美。</p></div></article>
+          <article class="tour reveal"><img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1000&q=85" alt="自然旅遊"><div class="tour-body"><span class="tag">台灣</span><h3>花東自然輕旅行</h3><p>慢遊海岸、山林與在地美食，享受悠閒假期。</p></div></article>
         </div>
       </div>
     </section>
@@ -330,7 +338,7 @@ html = r'''<!DOCTYPE html>
     <div class="container">
       <div class="footer-grid">
         <div>
-          <div class="footer-brand"><img src="https://lh3.googleusercontent.com/pw/AP1GczMjZsj8_0fygyEpbNhXMFEZhfTKQcoi5E9RV51d_WsTFt3hPwVmaNP6CCeCwBmN-AZ7jtEtS14t6FGDU4ptOJA_Ydm9YBQW5GwZKz8_wfJqBpYMbBgDOg_g6YO0h71E1asrm221d18q-RSqF0WQelJK=w1080-h1080-s-no-gm?authuser=0"><div><h3>瑪騏旅行社有限公司</h3><p>MAGI TRAVEL AGENCY</p></div></div>
+          <div class="footer-brand"><img src="https://lh3.googleusercontent.com/pw/AP1GczMjZsj8_0fygyEpbNhXMFEZhfTKQcoi5E9RV51d_WsTFt3hPwVmaNP6CCeCwBmN-AZ7jtEtS14t6FGDU4ptOJA_Ydm9YBQW5GwZKz8_wfJqBpYMbBgDOg_g6YO0h71E1asrm221d18q-[...]
           <p>用心規劃每一趟旅程，讓旅行成為美好回憶。</p>
         </div>
         <div><h3>網站導覽</h3><a href="#about">關於瑪騏</a><a href="#journey">公司歷史</a><a href="#services">旅遊服務</a><a href="#tours">精選行程</a></div>
@@ -354,4 +362,3 @@ html = r'''<!DOCTYPE html>
   </script>
 </body>
 </html>
-
