@@ -6,10 +6,6 @@ if base.exists():
     shutil.rmtree(base)
 base.mkdir()
 
-# Copy the uploaded logo into the website folder.
-logo_src = Path("/mnt/data/彩色Mg幸運四葉軌道徽章.png")
-shutil.copy2(logo_src, base / "logo.png")
-
 html = r'''<!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
