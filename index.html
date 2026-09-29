@@ -1,11 +1,3 @@
-from pathlib import Path
-import shutil, zipfile, textwrap
-
-base = Path("/mnt/data/machi_travel_website")
-if base.exists():
-    shutil.rmtree(base)
-base.mkdir()
-
 html = r'''<!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
